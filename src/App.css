@@ -63,6 +63,7 @@
 
 .form-input {
   all: unset;
+  background-color: white;
   border: 2px solid #ced4da;
   width: 360px;
   height: 42px;
@@ -70,7 +71,7 @@
   text-align: left;
   vertical-align: top;
   line-height: 42px;
-  border-radius: 10px;
+  border-radius: 5px;
   font-size: 18px;
 }
 
