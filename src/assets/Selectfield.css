@@ -1,0 +1,43 @@
+.select-container {
+  width: 550px;
+  height: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.options-list {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-top: 0;
+  padding: 0;
+  width: 550px;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  list-style-type: none;
+}
+
+.option-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.option-item:hover {
+  background-color: #f1f1f1;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+.form-btns {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 60px;
+  gap: 22px;
+}

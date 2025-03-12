@@ -55,7 +55,7 @@ const Form = () => {
         <input
           {...register("name")}
           onChange={handleChange}
-          className={errors.name ? "input-error" : "input-valid"}
+          className={errors.name ? "input-error" : ""}
         />
         <p style={{ color: "red" }}>{errors.name?.message}</p>
       </div>

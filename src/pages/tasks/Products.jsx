@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import EmployeeForm from "./EmployeeForm";
 
 const fetchProducts = async () => {
   const { data } = await axios.get("https://dummyjson.com/products");
@@ -9,6 +10,12 @@ const fetchProducts = async () => {
 };
 
 const ProductsList = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
   const navigate = useNavigate();
 
   const [minPrice, setMinPrice] = useState(
@@ -85,6 +92,8 @@ const ProductsList = () => {
 
   return (
     <div>
+      <button onClick={toggleModal}>Show Modal</button>
+      <EmployeeForm show={showModal} onClose={toggleModal} />
       <button onClick={() => navigate("/form")}>Form</button>
       <div className="p-4 space-x-4">
         <input
