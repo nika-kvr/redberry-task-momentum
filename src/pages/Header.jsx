@@ -6,6 +6,8 @@ import EmployeeForm from "./tasks/EmployeeForm";
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
 
+  const navigate = useNavigate();
+
   const toggleModal = () => {
     setShowModal(!showModal);
   };
@@ -19,7 +21,14 @@ const Header = () => {
         <button onClick={toggleModal} className="white-btn">
           თანამშრომლის შექმნა
         </button>
-        <button className="purple-btn">+ შექმენი ახალი დავალება</button>
+        <button
+          onClick={() => {
+            navigate("/taskform");
+          }}
+          className="purple-btn"
+        >
+          + შექმენი ახალი დავალება
+        </button>
       </div>
     </div>
   );

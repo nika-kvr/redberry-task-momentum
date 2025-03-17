@@ -13,16 +13,10 @@ const SelectField = ({ options, onChange, value }) => {
     setIsOpen(false);
   };
 
-  const selectedOption = options.find(
-    (option) => option.id === value?.id || option.id === value
-  );
-
-  const selectedName = selectedOption;
-
   return (
     <div className="select-field">
       <div className="select-container" onClick={handleToggle}>
-        <div className="selected-value">{selectedName}</div>
+        <div className="selected-value">{value}</div>
         <div className={`arrow ${isOpen ? "open" : ""}`}>
           <ArrowSvg />
         </div>

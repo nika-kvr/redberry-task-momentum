@@ -15,7 +15,7 @@ function App() {
         <Header />
         <QueryClientProvider client={queryClient}>
           <Routes>
-            <Route path="/products" element={<Products />} />
+            <Route path="/" element={<Products />} />
             <Route path="/taskForm" element={<TaskForm />} />
             <Route path="*" element={<h1> PAGE NOT FOUND</h1>} />
           </Routes>
