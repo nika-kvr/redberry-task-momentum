@@ -1,12 +1,41 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../../assets/TaskForm.css";
 import "../../assets/Selectfield.css";
 import SelectField from "../components/Selectfield.jsx";
+import EmpSelectffield from "../components/EmpSelectffield.jsx";
+import { GetDepartments, GetEmployees } from "./Requests.jsx";
 
 const TaskForm = () => {
-  const [selectedOption, setSelectedOption] = useState("");
-  const options = ["Option 1", "Option 2", "Option 3"];
+  const [selectedDep, setSelectedDep] = useState("");
+  const [selectedEmp, setSelectedEmp] = useState({});
+
+  const [departments, setDepartments] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [filteredEmps, setFilteredEmps] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const departments = await GetDepartments();
+      const employees = await GetEmployees();
+      setDepartments(departments);
+      setEmployees(employees);
+    };
+    fetchData();
+  }, []);
+
+  const departmentChange = (option) => {
+    const filteredEmployees = employees.filter((employee) => {
+      return employee.department.id === option.id;
+    });
+    setSelectedDep(option);
+    setFilteredEmps(filteredEmployees);
+    setSelectedEmp({});
+  };
+
+  const employeeChange = (option) => {
+    setSelectedEmp(option);
+  };
 
   return (
     <div className="taskForm-main-div">
@@ -24,9 +53,9 @@ const TaskForm = () => {
               <h3>დეპარტამენტი*</h3>
               <div>
                 <SelectField
-                  value={selectedOption}
-                  onChange={setSelectedOption}
-                  options={options}
+                  selected={selectedDep.name}
+                  onChange={departmentChange}
+                  options={departments}
                 />
               </div>
             </div>
@@ -37,12 +66,15 @@ const TaskForm = () => {
               <textarea className="text-area" />
             </div>
             <div className="inside-form-div">
-              <h3>პასუხისმგებელი თანამშრომელი*</h3>
+              <h3 style={{ color: !selectedDep.name && "#ADB5BD" }}>
+                პასუხისმგებელი თანამშრომელი*
+              </h3>
+              <input hidden value={selectedEmp?.id || ""} />
               <div>
-                <SelectField
-                  value={selectedOption}
-                  onChange={setSelectedOption}
-                  options={options}
+                <EmpSelectffield
+                  selected={selectedEmp}
+                  onChange={employeeChange}
+                  options={filteredEmps}
                 />
               </div>
             </div>

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import ArrowSvg from "./arrowSvg";
 
-const SelectField = ({ options, onChange, selected }) => {
+const EmpSelectffield = ({ options, onChange, selected }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef(null);
 
@@ -30,8 +30,15 @@ const SelectField = ({ options, onChange, selected }) => {
 
   return (
     <div className="select-field" ref={selectRef}>
-      <div className="select-container" onClick={handleToggle}>
-        <div className="selected-value">{selected}</div>
+      <div
+        className={`select-container ${options.length === 0 ? "disabled" : ""}`}
+        onClick={options.length > 0 ? handleToggle : null}
+      >
+        <div className="selected-value">
+          <img className="emp-img" src={selected.avatar} />
+          <p>{selected.name}</p>
+          <p>{selected.surname}</p>
+        </div>
         <div className={`arrow ${isOpen ? "open" : ""}`}>
           <ArrowSvg />
         </div>
@@ -44,7 +51,9 @@ const SelectField = ({ options, onChange, selected }) => {
               onClick={() => handleSelect(option)}
               className="option-item"
             >
-              {option.name}
+              <img className="emp-img" src={option.avatar} />
+              <p>{option.name}</p>
+              <p>{option.surname}</p>
             </div>
           ))}
         </ul>
@@ -53,4 +62,4 @@ const SelectField = ({ options, onChange, selected }) => {
   );
 };
 
-export default SelectField;
+export default EmpSelectffield;

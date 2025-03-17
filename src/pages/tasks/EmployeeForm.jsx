@@ -8,7 +8,8 @@ import dropzoneImg from "../../assets/images/dropzoneImg.png";
 import SelectField from "../components/Selectfield.jsx";
 import "../../assets/Selectfield.css";
 import imgDelete from "../../assets/images/imgDelete.png";
-import { departments, PostEmployee } from "./Requests.jsx";
+import { GetDepartments, PostEmployee } from "./Requests.jsx";
+import { useNavigate } from "react-router-dom";
 
 const schema = yup.object().shape({
   name: yup
@@ -42,6 +43,23 @@ const schema = yup.object().shape({
 
 const EmployeeForm = ({ show, onClose }) => {
   if (!show) return null;
+
+  const [departments, setDepartments] = useState([]);
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      const data = await GetDepartments();
+      setDepartments(data);
+    };
+    fetchDepartments();
+  }, []);
+
+  const handleDepartmentChange = (option) => {
+    setValue("department_id", option.id);
+    setDepartment(option.name);
+    trigger();
+  };
+
   const {
     register,
     handleSubmit,
@@ -164,12 +182,6 @@ const EmployeeForm = ({ show, onClose }) => {
     e.preventDefault();
   };
 
-  const handleDepartmentChange = (option) => {
-    setValue("department_id", option.id);
-    setDepartment(option.name);
-    trigger();
-  };
-
   const handleImageDelete = () => {
     setImgErrorSize(true);
     setImagePreview(null);
@@ -185,6 +197,8 @@ const EmployeeForm = ({ show, onClose }) => {
     }
   };
 
+  const navigate = useNavigate();
+
   const onSubmit = async (data) => {
     try {
       const formData = new FormData();
@@ -195,6 +209,8 @@ const EmployeeForm = ({ show, onClose }) => {
       formData.append("department_id", data.department_id);
 
       await PostEmployee(formData);
+
+      window.location.href = window.location.href;
     } catch (error) {
       console.error("Error uploading employee:", error);
     }
