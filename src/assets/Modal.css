@@ -48,3 +48,17 @@
 .dropzone-img {
   width: 24px;
 }
+.img-preview {
+  width: 88px;
+  height: 88px;
+  border-radius: 100px;
+  overflow: hidden;
+  object-fit: cover;
+}
+
+.img-delete {
+  all: unset;
+  position: absolute;
+  margin-top: 30px;
+  margin-left: -15px;
+}

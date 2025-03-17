@@ -13,7 +13,7 @@ const TaskForm = () => {
       <h1>შექმენი ახალი დავალება</h1>
       <div className="taskForm-div">
         <form>
-          <div className="form-name-div">
+          <div className="form-name-div form-name-div-task">
             <div className="inside-form-div task-form">
               <h3>სათაური*</h3>
               <input type="text" className="form-input satauri" />
@@ -31,10 +31,20 @@ const TaskForm = () => {
               </div>
             </div>
           </div>
-          <div className="form-name-div">
+          <div className="form-name-div form-name-div-task">
             <div className="inside-form-div">
               <h3>აღწერა</h3>
               <textarea className="text-area" />
+            </div>
+            <div className="inside-form-div">
+              <h3>პასუხისმგებელი თანამშრომელი*</h3>
+              <div>
+                <SelectField
+                  value={selectedOption}
+                  onChange={setSelectedOption}
+                  options={options}
+                />
+              </div>
             </div>
           </div>
         </form>

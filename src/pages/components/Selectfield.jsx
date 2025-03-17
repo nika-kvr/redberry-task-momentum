@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ArrowSvg from "./arrowSvg";
 
-const SelectField = ({ options, label, onChange, value }) => {
+const SelectField = ({ options, onChange, value }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = () => {
@@ -13,24 +13,29 @@ const SelectField = ({ options, label, onChange, value }) => {
     setIsOpen(false);
   };
 
+  const selectedOption = options.find(
+    (option) => option.id === value?.id || option.id === value
+  );
+
+  const selectedName = selectedOption;
+
   return (
     <div className="select-field">
-      <label>{label}</label>
       <div className="select-container" onClick={handleToggle}>
-        <div className="selected-value">{value || "Select an option"}</div>
+        <div className="selected-value">{selectedName}</div>
         <div className={`arrow ${isOpen ? "open" : ""}`}>
           <ArrowSvg />
         </div>
       </div>
       {isOpen && (
         <ul className="options-list">
-          {options.map((option, index) => (
+          {options.map((option) => (
             <li
-              key={index}
+              key={option.id}
               onClick={() => handleSelect(option)}
               className="option-item"
             >
-              {option}
+              {option.name}
             </li>
           ))}
         </ul>
