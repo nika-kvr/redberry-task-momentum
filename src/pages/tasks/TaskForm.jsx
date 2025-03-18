@@ -9,10 +9,49 @@ import {
   GetPriorities,
   GetStatuses,
 } from "./Requests.jsx";
-
 import dayjs from "dayjs";
 
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+const schema = yup.object().shape({
+  due_date: yup
+    .date()
+    .min(new Date(), "არ უნდა შეიძლებოდეს წარსული თარიღი")
+    .required("სავალდებულო"),
+  name: yup
+    .string()
+    .min(3, "მინიმუმ 2 სიმბოლო")
+    .max(255, "მინიმუმ 2 სიმბოლო")
+    .required("სავალდებულო"),
+  description: yup
+    .string()
+    .test("word-count", "მინიმუმ 4 სიტყვა (თუ ჩაიწერა რაიმე)", (value) => {
+      if (value && value.length > 0) {
+        const wordCount = value.trim().split(/\s+/).length;
+        return wordCount >= 4;
+      }
+      return true;
+    })
+    .max(255, "მინიმუმ 2 სიმბოლო"),
+  status_id: yup.string().required("სავალდებულო"),
+  employee_id: yup.string().required("სავალდებულო"),
+  priority_id: yup.string().required("სავალდებულო"),
+});
+
 const TaskForm = () => {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    trigger,
+    formState: { errors, isValid },
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: "onChange",
+  });
+
   const [selectedDep, setSelectedDep] = useState("");
   const [selectedEmp, setSelectedEmp] = useState({});
   const [selectedPrio, setSelectedPrio] = useState({});
@@ -28,8 +67,16 @@ const TaskForm = () => {
     dayjs().add(1, "day").format("YYYY-MM-DD")
   );
 
-  const handleDateChange = (e) => {
-    setSelectedDate(e.target.value);
+  const handleDateChange = async (e) => {
+    const { value } = e.target;
+    setSelectedDate(value);
+    console.log(value);
+
+    await trigger("due_date");
+
+    if (errors.due_date) {
+      console.log(errors.due_date.message);
+    }
   };
 
   useEffect(() => {
@@ -58,24 +105,37 @@ const TaskForm = () => {
   };
 
   const employeeChange = (option) => {
+    setValue("employee_id", option.id);
     setSelectedEmp(option);
   };
   const prioritiesChange = (option) => {
+    setValue("priority_id", option.id);
     setSelectedPrio(option);
   };
   const statusesChange = (option) => {
+    setValue("status_id", option.id);
     setSelectedStatus(option);
   };
 
+  const onSubmit = async (data) => {
+    console.log(data);
+  };
+  console.log("Is form valid?", isValid);
+
+  console.log("Form Errors:", errors);
   return (
     <div className="taskForm-main-div">
       <h1>შექმენი ახალი დავალება</h1>
       <div className="taskForm-div">
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-name-div form-name-div-task">
             <div className="inside-form-div task-form">
               <h3>სათაური*</h3>
-              <input type="text" className="form-input satauri" />
+              <input
+                {...register("name")}
+                type="text"
+                className="form-input satauri"
+              />
               <span>მინიმუმ 2 სიმბოლო</span>
               <span>მაქსიმუმ 255 სიმბოლო</span>
             </div>
@@ -93,13 +153,17 @@ const TaskForm = () => {
           <div className="form-name-div form-name-div-task">
             <div className="inside-form-div">
               <h3>აღწერა</h3>
-              <textarea className="text-area" />
+              <textarea {...register("description")} className="text-area" />
             </div>
             <div className="inside-form-div">
               <h3 style={{ color: !selectedDep.name && "#ADB5BD" }}>
                 პასუხისმგებელი თანამშრომელი*
               </h3>
-              <input hidden value={selectedEmp?.id || ""} />
+              <input
+                {...register("employee_id")}
+                hidden
+                value={selectedEmp?.id || ""}
+              />
               <div>
                 <SelectField
                   selected={selectedEmp}
@@ -116,7 +180,11 @@ const TaskForm = () => {
             <div className="inside-form-div">
               <h3>პრიორიტეტი*</h3>
               <div>
-                <input hidden value={selectedPrio?.id || ""} />
+                <input
+                  {...register("priority_id")}
+                  hidden
+                  value={selectedPrio?.id || ""}
+                />
                 <SelectField
                   width={"small"}
                   selected={selectedPrio}
@@ -128,7 +196,11 @@ const TaskForm = () => {
             <div className="inside-form-div">
               <h3>სტატუსი*</h3>
               <div>
-                <input hidden value={selectedStatus?.id || ""} />
+                <input
+                  {...register("status_id")}
+                  hidden
+                  value={selectedStatus?.id || ""}
+                />
                 <SelectField
                   width={"small"}
                   selected={selectedStatus}
@@ -141,6 +213,7 @@ const TaskForm = () => {
               <h3>დედლაინი</h3>
               <div>
                 <input
+                  {...register("due_date")}
                   onChange={handleDateChange}
                   value={selectedDate}
                   className="form-input "
@@ -148,6 +221,9 @@ const TaskForm = () => {
                 />
               </div>
             </div>
+          </div>
+          <div>
+            <button type="submit">დავალების შექმნა</button>
           </div>
         </form>
       </div>
