@@ -46,6 +46,7 @@ const TaskForm = () => {
     handleSubmit,
     setValue,
     trigger,
+    getValues,
     formState: { errors, isValid },
   } = useForm({
     resolver: yupResolver(schema),
@@ -69,8 +70,9 @@ const TaskForm = () => {
 
   const handleDateChange = async (e) => {
     const { value } = e.target;
-    setSelectedDate(value);
-    console.log(value);
+    const formattedDate = dayjs(value).format("YYYY-MM-DD");
+    setSelectedDate(formattedDate);
+    setValue("due_date", formattedDate);
 
     await trigger("due_date");
 
@@ -91,6 +93,7 @@ const TaskForm = () => {
       setEmployees(employees);
       setStatuses(statuses);
       setSelectedPrio(priorities[1]);
+      setValue("priority_id", priorities[1].id);
     };
     fetchData();
   }, []);
@@ -102,6 +105,7 @@ const TaskForm = () => {
     setSelectedDep(option);
     setFilteredEmps(filteredEmployees);
     setSelectedEmp({});
+    setValue("employee_id", "");
   };
 
   const employeeChange = (option) => {
@@ -120,9 +124,7 @@ const TaskForm = () => {
   const onSubmit = async (data) => {
     console.log(data);
   };
-  console.log("Is form valid?", isValid);
 
-  console.log("Form Errors:", errors);
   return (
     <div className="taskForm-main-div">
       <h1>შექმენი ახალი დავალება</h1>
@@ -222,8 +224,10 @@ const TaskForm = () => {
               </div>
             </div>
           </div>
-          <div>
-            <button type="submit">დავალების შექმნა</button>
+          <div className="task-btn-div">
+            <button className="purple-btn" type="submit">
+              დავალების შექმნა
+            </button>
           </div>
         </form>
       </div>
