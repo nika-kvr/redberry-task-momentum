@@ -51,9 +51,9 @@ const EmpSelectffield = ({ options, onChange, selected }) => {
               onClick={() => handleSelect(option)}
               className="option-item"
             >
-              <img className="emp-img" src={option.avatar} />
-              <p>{option.name}</p>
-              <p>{option.surname}</p>
+              {option.avatar && <img className="emp-img" src={option.avatar} />}
+              {option.name && <p>{option.name}</p>}
+              {option.surname && <p>{option.surname}</p>}
             </div>
           ))}
         </ul>

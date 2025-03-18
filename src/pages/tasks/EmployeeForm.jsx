@@ -56,7 +56,7 @@ const EmployeeForm = ({ show, onClose }) => {
 
   const handleDepartmentChange = (option) => {
     setValue("department_id", option.id);
-    setDepartment(option.name);
+    setDepartment(option);
     trigger();
   };
 
@@ -86,7 +86,7 @@ const EmployeeForm = ({ show, onClose }) => {
   const [isImgValid, setIsImgValid] = useState(true);
   const [imgErrorSize, setImgErrorSize] = useState(null);
 
-  const [department, setDepartment] = useState("");
+  const [department, setDepartment] = useState({});
 
   const handleNameChange = (e) => {
     isMinValid(e);
@@ -384,7 +384,7 @@ const EmployeeForm = ({ show, onClose }) => {
                 <h3>დეპარტამენტი*</h3>
                 <SelectField
                   options={departments}
-                  value={department}
+                  selected={department}
                   onChange={handleDepartmentChange}
                 />
                 <input type="hidden" {...register("department_id")} />

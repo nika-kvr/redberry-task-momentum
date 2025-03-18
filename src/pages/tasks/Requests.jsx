@@ -32,6 +32,34 @@ export const GetEmployees = async () => {
   }
 };
 
+export const GetPriorities = async () => {
+  try {
+    const response = await Axios.get(`${BASE_URL}priorities`, {
+      headers: {
+        Authorization: `Bearer ${API_TOKEN}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching departments:", error);
+    throw error;
+  }
+};
+
+export const GetStatuses = async () => {
+  try {
+    const response = await Axios.get(`${BASE_URL}statuses`, {
+      headers: {
+        Authorization: `Bearer ${API_TOKEN}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching departments:", error);
+    throw error;
+  }
+};
+
 export const PostEmployee = async (data) => {
   try {
     const response = await Axios.post(`${BASE_URL}employees`, data, {

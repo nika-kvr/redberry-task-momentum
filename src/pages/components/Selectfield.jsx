@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import ArrowSvg from "./arrowSvg";
 
-const SelectField = ({ options, onChange, selected }) => {
+const Selectfield = ({ options, onChange, selected, width }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef(null);
+
+  const widthPx = width === "small" ? "259px" : "550px";
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
@@ -29,22 +31,34 @@ const SelectField = ({ options, onChange, selected }) => {
   }, []);
 
   return (
-    <div className="select-field" ref={selectRef}>
-      <div className="select-container" onClick={handleToggle}>
-        <div className="selected-value">{selected}</div>
+    <div style={{ width: widthPx }} className="select-field" ref={selectRef}>
+      <div
+        style={{ width: widthPx }}
+        className={`select-container ${options.length === 0 ? "disabled" : ""}`}
+        onClick={options.length > 0 ? handleToggle : null}
+      >
+        <div style={{ width: widthPx }} className="selected-value">
+          {selected.icon && <img className="emp-img" src={selected.icon} />}
+          {selected.avatar && <img className="emp-img" src={selected.avatar} />}
+          {selected.name && <p>{selected.name}</p>}
+          {selected.surname && <p>{selected.surname}</p>}
+        </div>
         <div className={`arrow ${isOpen ? "open" : ""}`}>
           <ArrowSvg />
         </div>
       </div>
       {isOpen && (
-        <ul className="options-list">
+        <ul style={{ width: widthPx }} className="options-list">
           {options.map((option) => (
             <div
               key={option.id}
               onClick={() => handleSelect(option)}
               className="option-item"
             >
-              {option.name}
+              {option.icon && <img className="emp-img" src={option.icon} />}
+              {option.avatar && <img className="emp-img" src={option.avatar} />}
+              {option.name && <p>{option.name}</p>}
+              {option.surname && <p>{option.surname}</p>}
             </div>
           ))}
         </ul>
@@ -53,4 +67,4 @@ const SelectField = ({ options, onChange, selected }) => {
   );
 };
 
-export default SelectField;
+export default Selectfield;
