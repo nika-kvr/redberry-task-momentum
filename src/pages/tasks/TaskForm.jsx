@@ -46,12 +46,48 @@ const TaskForm = () => {
     handleSubmit,
     setValue,
     trigger,
-    getValues,
+    watch,
     formState: { errors, isValid },
   } = useForm({
     resolver: yupResolver(schema),
     mode: "onChange",
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const departments = await GetDepartments();
+      const employees = await GetEmployees();
+      const priorities = await GetPriorities();
+      const statuses = await GetStatuses();
+
+      setPriorities(priorities);
+      setDepartments(departments);
+      setEmployees(employees);
+      setStatuses(statuses);
+      setSelectedPrio(priorities[1]);
+      setValue("priority_id", priorities[1].id);
+    };
+    fetchData();
+
+    const savedName = localStorage.getItem("name");
+    const savedDescription = localStorage.getItem("description");
+    const savedDue_date = localStorage.getItem("due_date");
+    const savedStatus = JSON.parse(localStorage.getItem("status"));
+    const savedEmployee = JSON.parse(localStorage.getItem("employee"));
+    const savedPriority = localStorage.getItem("priority_id");
+
+    savedName !== null && setValue("name", savedName);
+    savedDescription !== null && setValue("description", savedDescription);
+    savedDue_date !== null && setValue("due_date", savedDue_date);
+    if (savedStatus !== null) {
+      setValue("status_id", savedStatus.id);
+      setSelectedStatus(savedStatus);
+    }
+    if (savedEmployee !== null) {
+      setValue("employee_id", savedEmployee.id);
+      setSelectedEmp(savedEmployee);
+    }
+  }, [setValue]);
 
   const [selectedDep, setSelectedDep] = useState("");
   const [selectedEmp, setSelectedEmp] = useState({});
@@ -81,22 +117,18 @@ const TaskForm = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const departments = await GetDepartments();
-      const employees = await GetEmployees();
-      const priorities = await GetPriorities();
-      const statuses = await GetStatuses();
+  const watchAndSaveToLocalStorage = (field) => {
+    useEffect(() => {
+      const value = watch(field);
+      if (value !== undefined) {
+        localStorage.setItem(field, value);
+      }
+    }, [watch(field), field]);
+  };
 
-      setPriorities(priorities);
-      setDepartments(departments);
-      setEmployees(employees);
-      setStatuses(statuses);
-      setSelectedPrio(priorities[1]);
-      setValue("priority_id", priorities[1].id);
-    };
-    fetchData();
-  }, []);
+  watchAndSaveToLocalStorage("name");
+  watchAndSaveToLocalStorage("due_date");
+  watchAndSaveToLocalStorage("description");
 
   const departmentChange = (option) => {
     const filteredEmployees = employees.filter((employee) => {
@@ -106,19 +138,29 @@ const TaskForm = () => {
     setFilteredEmps(filteredEmployees);
     setSelectedEmp({});
     setValue("employee_id", "");
+    localStorage.removeItem("employee");
+    localStorage.setItem("department", JSON.stringify(option));
   };
 
   const employeeChange = (option) => {
     setValue("employee_id", option.id);
     setSelectedEmp(option);
+    localStorage.setItem("employee", JSON.stringify(option));
   };
   const prioritiesChange = (option) => {
     setValue("priority_id", option.id);
     setSelectedPrio(option);
+    localStorage.setItem("priority", JSON.stringify(option));
   };
   const statusesChange = (option) => {
     setValue("status_id", option.id);
     setSelectedStatus(option);
+    localStorage.setItem("status", JSON.stringify(option));
+  };
+
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+    localStorage.setItem("name", e.target.value);
   };
 
   const onSubmit = async (data) => {
@@ -134,6 +176,7 @@ const TaskForm = () => {
             <div className="inside-form-div task-form">
               <h3>სათაური*</h3>
               <input
+                onChange={handleNameChange}
                 {...register("name")}
                 type="text"
                 className="form-input satauri"
