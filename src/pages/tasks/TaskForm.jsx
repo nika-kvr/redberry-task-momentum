@@ -10,7 +10,6 @@ import {
   GetStatuses,
 } from "./Requests.jsx";
 import dayjs from "dayjs";
-
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -64,8 +63,15 @@ const TaskForm = () => {
       setDepartments(departments);
       setEmployees(employees);
       setStatuses(statuses);
-      setSelectedPrio(priorities[1]);
-      setValue("priority_id", priorities[1].id);
+      if (localStorage.getItem("priority")) {
+        const priority = JSON.parse(localStorage.getItem("priority"));
+        setSelectedPrio(priority);
+        setValue("priority_id", priority.id);
+      } else {
+        setSelectedPrio(priorities[1]);
+        setValue("priority_id", priorities[1].id);
+      }
+      await trigger();
     };
     fetchData();
 
@@ -79,6 +85,10 @@ const TaskForm = () => {
     savedName !== null && setValue("name", savedName);
     savedDescription !== null && setValue("description", savedDescription);
     savedDue_date !== null && setValue("due_date", savedDue_date);
+    if (savedDue_date !== null) {
+      setValue("due_date", savedDue_date);
+      setSelectedDate(savedDue_date);
+    }
     if (savedStatus !== null) {
       setValue("status_id", savedStatus.id);
       setSelectedStatus(savedStatus);
@@ -103,20 +113,6 @@ const TaskForm = () => {
   const [selectedDate, setSelectedDate] = useState(
     dayjs().add(1, "day").format("YYYY-MM-DD")
   );
-
-  const handleDateChange = async (e) => {
-    const { value } = e.target;
-    const formattedDate = dayjs(value).format("YYYY-MM-DD");
-    setSelectedDate(formattedDate);
-    setValue("due_date", formattedDate);
-
-    await trigger("due_date");
-
-    if (errors.due_date) {
-      console.log(errors.due_date.message);
-    }
-  };
-
   const watchAndSaveToLocalStorage = (field) => {
     useEffect(() => {
       const value = watch(field);
@@ -130,6 +126,69 @@ const TaskForm = () => {
   watchAndSaveToLocalStorage("due_date");
   watchAndSaveToLocalStorage("description");
 
+  // validations
+  const [nameMinError, setNameMinError] = useState(null);
+  const [nameMaxError, setNameMaxError] = useState(null);
+  const [descMinWordsError, setDescMinWordsError] = useState(null);
+  const [descMaxError, setDescMaxError] = useState(null);
+  const [dateError, setDateError] = useState(null);
+
+  const isNameMin = (value) => {
+    value && value.length >= 3 ? setNameMinError(false) : setNameMinError(true);
+    return value && value >= 3;
+  };
+
+  const isNameMax = (value) => {
+    value.length <= 255 ? setNameMaxError(false) : setNameMaxError(true);
+    return value && value <= 255;
+  };
+
+  const isDescMinWords = (value) => {
+    if (value.length > 0) {
+      const wordCount = value.trim().split(/\s+/).length;
+      if (wordCount >= 4) {
+        setDescMinWordsError(false);
+        return true;
+      } else {
+        setDescMinWordsError(true);
+        return false;
+      }
+    }
+    setDescMinWordsError(false);
+    return true;
+  };
+  const isDescMax = (value) => {
+    if (value.length === 0) {
+      setDescMaxError(false);
+      return true;
+    }
+    if (value.length <= 255) {
+      setDescMaxError(false);
+      return true;
+    }
+    setDescMaxError(true);
+    return false;
+  };
+
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+    isNameMin(value);
+    isNameMax(value);
+  };
+  const handleDescChange = (e) => {
+    const value = e.target.value;
+    isDescMinWords(value);
+    isDescMax(value);
+  };
+
+  const handleDateChange = async (e) => {
+    const { value } = e.target;
+    const formattedDate = dayjs(value).format("YYYY-MM-DD");
+    setSelectedDate(formattedDate);
+    setValue("due_date", formattedDate);
+    trigger();
+  };
+
   const departmentChange = (option) => {
     const filteredEmployees = employees.filter((employee) => {
       return employee.department.id === option.id;
@@ -140,27 +199,26 @@ const TaskForm = () => {
     setValue("employee_id", "");
     localStorage.removeItem("employee");
     localStorage.setItem("department", JSON.stringify(option));
+    trigger();
   };
 
   const employeeChange = (option) => {
     setValue("employee_id", option.id);
     setSelectedEmp(option);
     localStorage.setItem("employee", JSON.stringify(option));
+    trigger();
   };
   const prioritiesChange = (option) => {
     setValue("priority_id", option.id);
     setSelectedPrio(option);
     localStorage.setItem("priority", JSON.stringify(option));
+    trigger();
   };
   const statusesChange = (option) => {
     setValue("status_id", option.id);
     setSelectedStatus(option);
     localStorage.setItem("status", JSON.stringify(option));
-  };
-
-  const handleNameChange = (e) => {
-    const value = e.target.value;
-    localStorage.setItem("name", e.target.value);
+    trigger();
   };
 
   const onSubmit = async (data) => {
@@ -176,13 +234,35 @@ const TaskForm = () => {
             <div className="inside-form-div task-form">
               <h3>სათაური*</h3>
               <input
-                onChange={handleNameChange}
-                {...register("name")}
+                {...register("name", { onChange: handleNameChange })}
                 type="text"
                 className="form-input satauri"
+                style={{
+                  borderColor: nameMinError || nameMaxError ? "red" : "#CED4DA",
+                }}
               />
-              <span>მინიმუმ 2 სიმბოლო</span>
-              <span>მაქსიმუმ 255 სიმბოლო</span>
+              <span
+                style={{
+                  color: nameMinError
+                    ? "red"
+                    : nameMinError === null
+                    ? "gray"
+                    : "green",
+                }}
+              >
+                მინიმუმ 3 სიმბოლო
+              </span>
+              <span
+                style={{
+                  color: nameMaxError
+                    ? "red"
+                    : nameMaxError === null
+                    ? "gray"
+                    : "green",
+                }}
+              >
+                მაქსიმუმ 255 სიმბოლო
+              </span>
             </div>
             <div className="inside-form-div task-form">
               <h3>დეპარტამენტი*</h3>
@@ -198,7 +278,32 @@ const TaskForm = () => {
           <div className="form-name-div form-name-div-task">
             <div className="inside-form-div">
               <h3>აღწერა</h3>
-              <textarea {...register("description")} className="text-area" />
+              <textarea
+                {...register("description", { onChange: handleDescChange })}
+                className="text-area"
+              />
+              <span
+                style={{
+                  color: descMinWordsError
+                    ? "red"
+                    : descMinWordsError === null
+                    ? "gray"
+                    : "green",
+                }}
+              >
+                მინიმუმ 4 სიტყვა (თუ ჩაიწერა რაიმე)
+              </span>
+              <span
+                style={{
+                  color: descMaxError
+                    ? "red"
+                    : descMaxError === null
+                    ? "gray"
+                    : "green",
+                }}
+              >
+                მაქსიმუმ 255 სიტყვა (თუ ჩაიწერა რაიმე)
+              </span>
             </div>
             <div className="inside-form-div">
               <h3 style={{ color: !selectedDep.name && "#ADB5BD" }}>
@@ -268,7 +373,15 @@ const TaskForm = () => {
             </div>
           </div>
           <div className="task-btn-div">
-            <button className="purple-btn" type="submit">
+            <button
+              style={{
+                backgroundColor: !isValid ? "#B588F4" : "#8338EC",
+                borderColor: !isValid ? "#B588F4" : "#8338EC",
+                cursor: !isValid ? "auto" : "pointer",
+              }}
+              type="submit"
+              className="purple-btn"
+            >
               დავალების შექმნა
             </button>
           </div>
