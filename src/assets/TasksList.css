@@ -1,0 +1,97 @@
+.tasks-div-main {
+  display: flex;
+  flex-direction: row;
+  gap: 52px;
+}
+.task-div {
+  display: flex;
+  flex-direction: column;
+  width: 381px;
+  gap: 30px;
+}
+.task-header {
+  width: 100%;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 23px;
+  border-radius: 10px;
+}
+
+.task-card {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+  height: 217px;
+  padding: 20px;
+  border-radius: 15px;
+  border: 2px solid #f7bc30;
+}
+
+.task-card-header {
+  display: flex;
+  justify-content: space-between;
+  height: 26px;
+}
+
+.task-card-main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 64px;
+}
+
+.task-card-footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 31px;
+}
+.status-div {
+  gap: 4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+  border: 1px solid #f7bc30;
+  border-radius: 4px;
+  padding: 4px 6px 4px 4px;
+}
+.dep-div {
+  display: flex;
+  padding: 5px 18.5px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background-color: blueviolet;
+  color: white;
+}
+.date-div {
+  display: flex;
+  align-items: center;
+}
+
+.desc-p {
+  color: #343a40;
+  text-align: left;
+}
+.task-name {
+  text-align: left;
+}
+
+.task-card-img {
+  width: 31px;
+  border-radius: 100px;
+  overflow: hidden;
+  object-fit: cover;
+}
+.comment-div {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 5px;
+}

@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "../../assets/TaskForm.css";
 import "../../assets/Selectfield.css";
@@ -8,6 +9,7 @@ import {
   GetEmployees,
   GetPriorities,
   GetStatuses,
+  PostTask,
 } from "./Requests.jsx";
 import dayjs from "dayjs";
 import * as yup from "yup";
@@ -98,6 +100,8 @@ const TaskForm = () => {
       setSelectedEmp(savedEmployee);
     }
   }, [setValue]);
+
+  const navigate = useNavigate();
 
   const [selectedDep, setSelectedDep] = useState("");
   const [selectedEmp, setSelectedEmp] = useState({});
@@ -222,7 +226,24 @@ const TaskForm = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
+    try {
+      const res = await PostTask(data);
+      if (res.status === 201) {
+        const keysToRemove = [
+          "name",
+          "department",
+          "description",
+          "due_date",
+          "employee",
+          "priority",
+          "status",
+        ];
+        keysToRemove.forEach((key) => localStorage.removeItem(key));
+        navigate("/");
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (

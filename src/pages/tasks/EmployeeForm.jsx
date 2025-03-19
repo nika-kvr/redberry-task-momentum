@@ -208,9 +208,11 @@ const EmployeeForm = ({ show, onClose }) => {
       formData.append("avatar", data.avatar);
       formData.append("department_id", data.department_id);
 
-      await PostEmployee(formData);
+      const res = await PostEmployee(formData);
 
-      window.location.href = window.location.href;
+      if (res.status === 201) {
+        window.location.href = window.location.href;
+      }
     } catch (error) {
       console.error("Error uploading employee:", error);
     }
