@@ -1,32 +1,53 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { GetTasks } from "./Requests";
 import "../../assets/TasksList.css";
-import CommentLogo from "../../assets/images/commentImg.png";
+import ArrowSvg from "../components/arrowSvg";
 
-const truncateText = (text, maxLength = 100) => {
-  return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
-};
-
-const TruncatedText = ({ text }) => {
-  return <p className="desc-p">{truncateText(text)}</p>;
-};
+import TaskCard from "../components/TaskCard";
 
 const TasksList = () => {
+  const selectRef = useRef(null);
   const [tasks, setTasks] = useState([]);
+  const [empFilterDiv, setEmpFilterDiv] = useState(false);
 
+  const handleClickOutside = (e) => {
+    if (
+      selectRef.current &&
+      !selectRef.current.contains(e.target) &&
+      !e.target.closest(".filter-btn")
+    ) {
+      setEmpFilterDiv(false);
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       const tasks = await GetTasks();
       setTasks(tasks);
     };
     fetchData();
-  }, []);
-  console.log(tasks);
 
-  const maxLength = 100;
-  const truncatedText = (text) => {
-    return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  // console.log(tasks);
+
+  const tasks1 = tasks.filter((task) => task.status.id === 1);
+  const tasks2 = tasks.filter((task) => task.status.id === 2);
+  const tasks3 = tasks.filter((task) => task.status.id === 3);
+  const tasks4 = tasks.filter((task) => task.status.id === 4);
+
+  const filterBtnClick = () => {
+    console.log("filtered");
   };
+
+  const empFilterBtn = (e) => {
+    e.stopPropagation();
+    setEmpFilterDiv(!empFilterDiv);
+  };
+
   return (
     <div
       style={{
@@ -39,69 +60,58 @@ const TasksList = () => {
     >
       <h1>დავალებების გვერდი</h1>
       <div className="filter-div-main">
-        <h1>Filtering</h1>
+        <div className="filters-div">
+          <div onClick={filterBtnClick} className="filter-btn">
+            <p>დეპარტამენტი</p>
+            <ArrowSvg />
+          </div>
+          <div className="filter-btn">
+            <p>პრიორიტეტი</p>
+            <ArrowSvg />
+          </div>
+          <div onClick={empFilterBtn} className="filter-btn">
+            <p style={{ color: empFilterDiv && "#8338ec" }}>თანამშრომელი</p>
+            <ArrowSvg />
+          </div>
+          {empFilterDiv && (
+            <div ref={selectRef} className="emp-filter-div">
+              employee filter div
+            </div>
+          )}
+        </div>
       </div>
       <div className="tasks-div-main">
-        {/* {tasks.map((task) => (
-        <div key={task.id}>
-          <h4>{task.name}</h4>
-        </div>
-      ))} */}
         <div className="task-div">
           <div style={{ backgroundColor: "#F7BC30" }} className="task-header">
             დასაწყები
           </div>
-          <div className="task-card">
-            <div className="task-card-header">
-              <div style={{ display: "flex", gap: "10px" }}>
-                <div className="status-div">
-                  <img src="https://momentum.redberryinternship.ge/storage/priority-icons/Low.svg" />
-                  <p style={{ fontSize: "12px" }}>საშუალო</p>
-                </div>
-                <div className="dep-div">
-                  <p style={{ fontSize: "12px" }}>დიზაინი</p>
-                </div>
-              </div>
-              <div className="date-div">
-                <p>11 იანვ. 2025</p>
-              </div>
-            </div>
-            <div className="task-card-main">
-              <div className="task-card-name">
-                <h4 className="task-name">დავალების სახელი</h4>
-              </div>
-              <div className="task-card-desc">
-                <TruncatedText text={"airi"} />
-              </div>
-            </div>
-            <div className="task-card-footer">
-              <div>
-                <img
-                  className="task-card-img"
-                  src="https://momentum.redberryinternship.ge/storage/employee-avatars/5fAh7dY1QWpIj3dxy8UE0uVyDryhFRiv24Bgr23e.jpg"
-                />
-              </div>
-              <div className="comment-div">
-                <img src={CommentLogo} />
-                <div>8</div>
-              </div>
-            </div>
-          </div>
+          {tasks1.map((task) => (
+            <TaskCard key={task.id} data={task} />
+          ))}
         </div>
         <div className="task-div">
           <div style={{ backgroundColor: "#FB5607" }} className="task-header">
             პროგრესში
           </div>
+          {tasks2.map((task) => (
+            <TaskCard key={task.id} data={task} />
+          ))}
         </div>
         <div className="task-div">
           <div style={{ backgroundColor: "#FF006E" }} className="task-header">
             მზად ტესტირებისთვის
           </div>
+          {tasks3.map((task) => (
+            <TaskCard key={task.id} data={task} />
+          ))}
         </div>
         <div className="task-div">
           <div style={{ backgroundColor: "#3A86FF" }} className="task-header">
             დასრულებული
           </div>
+          {tasks4.map((task) => (
+            <TaskCard key={task.id} data={task} />
+          ))}
         </div>
       </div>
     </div>

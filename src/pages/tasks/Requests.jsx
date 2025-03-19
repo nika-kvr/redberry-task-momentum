@@ -2,7 +2,7 @@ import Axios from "axios";
 
 const BASE_URL = "https://momentum.redberryinternship.ge/api/";
 
-const API_TOKEN = "9e6e5fac-3178-46ef-afc2-03951beadd25";
+const API_TOKEN = "9e789327-8a4d-4390-b855-03f00df3e12e";
 
 export const GetDepartments = async () => {
   try {

@@ -28,7 +28,7 @@
   height: 217px;
   padding: 20px;
   border-radius: 15px;
-  border: 2px solid #f7bc30;
+  border: 2px solid;
 }
 
 .task-card-header {
@@ -57,7 +57,7 @@
   flex-direction: row;
   align-items: center;
   height: 100%;
-  border: 1px solid #f7bc30;
+  border: 1px solid;
   border-radius: 4px;
   padding: 4px 6px 4px 4px;
 }
@@ -94,4 +94,34 @@
   align-items: center;
   flex-direction: row;
   gap: 5px;
+}
+
+.filters-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12.5px 18px;
+  width: 688px;
+  height: 44px;
+  border: 2px solid #dee2e6;
+  border-radius: 10px;
+}
+
+.filter-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 13px;
+  cursor: pointer;
+}
+.emp-filter-div {
+  width: 688px;
+  height: 288px;
+  position: absolute;
+  border: 2px solid #8338ec;
+  border-radius: 10px;
+  background-color: white;
+  top: 283px;
+  left: 117px;
 }
