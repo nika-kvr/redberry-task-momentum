@@ -1,4 +1,5 @@
 import CommentLogo from "../../assets/images/commentImg.png";
+import { useNavigate } from "react-router-dom";
 
 const truncateText = (text, size) => {
   if (!text) return "";
@@ -30,11 +31,15 @@ const getBorderColor = (statusId) => {
 };
 
 const TaskCard = (data) => {
+  const navigate = useNavigate();
   const task = data.data;
   const due_date = task.due_date.slice(0, 10);
   return (
     <div>
       <div
+        onClick={() => {
+          navigate(`/task/${task.id}`);
+        }}
         style={{
           borderColor: getBorderColor(task.status.id),
         }}

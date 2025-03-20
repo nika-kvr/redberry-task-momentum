@@ -1,0 +1,42 @@
+.main-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 40px 121px;
+  gap: 223px;
+}
+.task-det-div {
+  width: 715px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.task-det-status {
+  display: flex;
+  gap: 18px;
+}
+.task-det-details {
+  margin-top: 73px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.task-detail {
+  width: 220px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+.comments-main-div {
+  width: 741px;
+  padding: 40px 45px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ddd2ff;
+  border-radius: 10px;
+}

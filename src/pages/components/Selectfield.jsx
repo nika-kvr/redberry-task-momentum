@@ -1,7 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import ArrowSvg from "./arrowSvg";
+import AddImgSvg from "../components/addImgSvg";
 
-const Selectfield = ({ options, onChange, selected, width }) => {
+const Selectfield = ({
+  options,
+  onChange,
+  selected,
+  width,
+  emp,
+  toggleModal,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef(null);
 
@@ -49,6 +57,18 @@ const Selectfield = ({ options, onChange, selected, width }) => {
       </div>
       {isOpen && (
         <ul style={{ width: widthPx }} className="options-list">
+          {emp && (
+            <div
+              onClick={() => {
+                toggleModal();
+                setIsOpen(false);
+              }}
+              className="add-emp-div option-item"
+            >
+              <AddImgSvg />
+              <p style={{ color: "#8338EC" }}>დაამატე თანამშრომელი</p>
+            </div>
+          )}
           {options.map((option) => (
             <div
               key={option.id}

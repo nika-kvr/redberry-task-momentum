@@ -3,14 +3,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import EmployeeForm from "./tasks/EmployeeForm";
 
-const Header = () => {
-  const [showModal, setShowModal] = useState(false);
-
+const Header = ({ showModal, toggleModal }) => {
   const navigate = useNavigate();
 
-  const toggleModal = () => {
-    setShowModal(!showModal);
-  };
   return (
     <div className="header">
       <EmployeeForm show={showModal} onClose={toggleModal} />

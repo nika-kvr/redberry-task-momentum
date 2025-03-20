@@ -41,7 +41,7 @@ const schema = yup.object().shape({
   priority_id: yup.string().required("სავალდებულო"),
 });
 
-const TaskForm = () => {
+const TaskForm = ({ toggleModal }) => {
   const {
     register,
     handleSubmit,
@@ -337,6 +337,8 @@ const TaskForm = () => {
               />
               <div>
                 <SelectField
+                  toggleModal={toggleModal}
+                  emp={true}
                   selected={selectedEmp}
                   onChange={employeeChange}
                   options={filteredEmps}
