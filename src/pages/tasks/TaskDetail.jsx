@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { GetTask, GetStatuses, PutTask } from "./Requests";
 import "../../assets/TaskDetail.css";
 import "../../assets/TasksList.css";
-import StatusSvg from "../components/statusSvg";
+import StatusSvg from "../components/StatusSvg";
 import EmployeeSvg from "../components/EmployeeSvg";
 import CalendarSvg from "../components/CalendarSvg";
 import Selectfield from "../components/Selectfield";
