@@ -9,8 +9,10 @@ import EmployeeSvg from "../components/EmployeeSvg";
 import CalendarSvg from "../components/CalendarSvg";
 import Selectfield from "../components/Selectfield";
 import Comment from "./Comments";
+import { useNavigate } from "react-router-dom";
 
 const TaskDetail = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const { data, error, isLoading } = useQuery({
@@ -62,7 +64,7 @@ const TaskDetail = () => {
     console.log(data, taskId);
     const res = await PutTask(taskId, dataReq);
     if (res.status === 200) {
-      window.location.reload();
+      navigate("/");
     }
   };
 
