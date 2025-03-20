@@ -18,6 +18,7 @@
 }
 
 .momentumLogo {
+  cursor: pointer;
   width: 210px;
   margin-left: 120px;
 }

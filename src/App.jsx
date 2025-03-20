@@ -1,6 +1,5 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Products from "./pages/tasks/Products";
 import TasksList from "./pages/tasks/TasksList";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Header from "./pages/Header";
@@ -17,7 +16,6 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <Routes>
             <Route path="/" element={<TasksList />} />
-            <Route path="/products" element={<Products />} />
             <Route path="/taskForm" element={<TaskForm />} />
             <Route path="*" element={<h1> PAGE NOT FOUND</h1>} />
           </Routes>

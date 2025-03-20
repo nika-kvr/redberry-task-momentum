@@ -59,6 +59,7 @@ export const GetStatuses = async () => {
     throw error;
   }
 };
+
 export const GetTasks = async () => {
   try {
     const response = await Axios.get(`${BASE_URL}tasks`, {

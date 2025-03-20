@@ -15,7 +15,13 @@ const Header = () => {
     <div className="header">
       <EmployeeForm show={showModal} onClose={toggleModal} />
       <div>
-        <img className="momentumLogo" src={momentumLogo}></img>
+        <img
+          onClick={() => {
+            navigate("/");
+          }}
+          className="momentumLogo"
+          src={momentumLogo}
+        ></img>
       </div>
       <div className="header-btn-div">
         <button onClick={toggleModal} className="white-btn">

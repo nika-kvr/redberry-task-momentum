@@ -109,6 +109,7 @@
 }
 
 .filter-btn {
+  height: 44px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -116,12 +117,90 @@
   cursor: pointer;
 }
 .emp-filter-div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 40px 30px 20px 30px;
   width: 688px;
-  height: 288px;
   position: absolute;
   border: 2px solid #8338ec;
   border-radius: 10px;
   background-color: white;
-  top: 283px;
+  top: 280px;
   left: 117px;
+}
+
+.filter-btn-choose {
+  margin-top: 25px;
+  width: 155px;
+  height: 35px;
+  font-size: 20px;
+  border-radius: 20px;
+}
+.emp-div-main {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  border: 2px solid #8338ec;
+  border-radius: 6px;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+}
+.emp-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+}
+.name-sname-dvi {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-div {
+  width: 100%;
+  display: flex;
+  justify-content: right;
+}
+
+.filter-div-main {
+  margin-top: 52px;
+}
+.filter-btns-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  height: 80px;
+}
+
+.filter-btns-div div {
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  gap: 4px;
+  border: 2px solid #ced4da;
+  border-radius: 43px;
+  height: 29px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.dlt-filters-btn {
+  all: unset;
+  cursor: pointer;
+}
+.arrow {
+  display: flex;
+  align-items: center;
 }
