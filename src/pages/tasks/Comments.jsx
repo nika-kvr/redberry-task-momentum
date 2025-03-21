@@ -42,7 +42,11 @@ const Comments = ({ comments, taskId, refetch }) => {
       {comments?.map((comment) => (
         <div>
           <div className="comment-card">
-            <img className="emp-img" src={comment.author_avatar} />
+            <img
+              style={{ width: "36px", height: "36px" }}
+              className="emp-img"
+              src={comment.author_avatar}
+            />
             <div
               style={{
                 display: "flex",
@@ -111,7 +115,11 @@ const Comments = ({ comments, taskId, refetch }) => {
             {comment.sub_comments?.map((subComment) => (
               <div>
                 <div className="comment-card">
-                  <img className="emp-img" src={subComment.author_avatar} />
+                  <img
+                    style={{ width: "36px", height: "36px" }}
+                    className="emp-img"
+                    src={subComment.author_avatar}
+                  />
                   <div
                     style={{
                       display: "flex",
