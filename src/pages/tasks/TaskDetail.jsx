@@ -1,23 +1,42 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { GetTask, GetStatuses, PutTask } from "./Requests";
+import {
+  GetTask,
+  GetStatuses,
+  PutTask,
+  GetComments,
+  PostComment,
+} from "./Requests";
 import "../../assets/TaskDetail.css";
 import "../../assets/TasksList.css";
 import StatusSvg from "../components/StatusSvg";
 import EmployeeSvg from "../components/EmployeeSvg";
 import CalendarSvg from "../components/CalendarSvg";
 import Selectfield from "../components/Selectfield";
-import Comment from "./Comments";
+import Comments from "./Comments";
 import { useNavigate } from "react-router-dom";
 
 const TaskDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  const [commentTxt, setCommentTxt] = useState("");
+
   const { data, error, isLoading } = useQuery({
     queryKey: ["tasks", id],
     queryFn: () => GetTask(id),
+    retry: Infinity,
+  });
+
+  const {
+    data: comments,
+    errorComments,
+    isLoadingComments,
+    refetch,
+  } = useQuery({
+    queryKey: ["comments", id],
+    queryFn: () => GetComments(id),
     retry: Infinity,
   });
 
@@ -30,13 +49,6 @@ const TaskDetail = () => {
     queryFn: GetStatuses,
     retry: Infinity,
   });
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading data</div>;
-  if (isLoadingStatus) return <div>Loading...</div>;
-  if (errorStatus) return <div>Error loading data</div>;
-
-  console.log(data);
 
   const getPriorityColor = (priorityId) => {
     return priorityId === 1
@@ -68,22 +80,43 @@ const TaskDetail = () => {
     }
   };
 
+  const postComment = async () => {
+    if (commentTxt) {
+      const parent_id = comments?.parent_id;
+      const data = {
+        text: commentTxt,
+        ...(parent_id && { parent_id }),
+      };
+      const res = await PostComment(data, id);
+      if (res.status === 201) {
+        refetch();
+        setCommentTxt("");
+      }
+    }
+  };
+
+  if (isLoading || isLoadingStatus || isLoadingComments)
+    return <div>Loading...</div>;
+  if (error || errorStatus || errorComments)
+    return <div>Error loading data</div>;
+
+  console.log(comments);
   return (
     <div>
       <div className="main-div">
         <div className="task-det-div">
           <div className="task-det-status">
             <div
-              style={{ borderColor: getPriorityColor(data.priority.id) }}
+              style={{ borderColor: getPriorityColor(data?.priority.id) }}
               className="status-div"
             >
-              <img src={data.priority.icon} />
-              <p style={{ color: getPriorityColor(data.priority.id) }}>
-                {data.priority.name}
+              <img src={data?.priority.icon} />
+              <p style={{ color: getPriorityColor(data?.priority.id) }}>
+                {data?.priority.name}
               </p>
             </div>
             <div className="dep-div">
-              {<TruncatedText text={data.department.name} size="sm" />}
+              {<TruncatedText text={data?.department.name} size="sm" />}
             </div>
           </div>
           <div
@@ -101,7 +134,7 @@ const TaskDetail = () => {
                 textAlign: "left",
               }}
             >
-              {data.name}
+              {data?.name}
             </h2>
             <div
               style={{
@@ -111,7 +144,7 @@ const TaskDetail = () => {
                 textAlign: "left",
               }}
             >
-              {data.description}
+              {data?.description}
             </div>
           </div>
           <div className="task-det-details">
@@ -131,8 +164,8 @@ const TaskDetail = () => {
               <div className="task-detail">
                 <Selectfield
                   width={"small"}
-                  options={statuses}
-                  selected={data.status}
+                  options={statuses && statuses}
+                  selected={data?.status}
                   onChange={handleStatusChange}
                 />
               </div>
@@ -145,15 +178,15 @@ const TaskDetail = () => {
                 className="task-detail"
               >
                 <div>
-                  <img className="task-card-img" src={data.employee.avatar} />
+                  <img className="task-card-img" src={data?.employee.avatar} />
                 </div>
                 <div>
                   <div style={{ fontSize: "12px", width: "200px" }}>
-                    {data.department.name}
+                    {data?.department.name}
                   </div>
                   <div style={{ display: "flex", gap: "6px" }}>
-                    <div>{data.employee.name}</div>
-                    <div>{data.employee.surname}</div>
+                    <div>{data?.employee.name}</div>
+                    <div>{data?.employee.surname}</div>
                   </div>
                 </div>
               </div>
@@ -161,13 +194,14 @@ const TaskDetail = () => {
                 <CalendarSvg />
                 <p>დავალების ვადა</p>
               </div>
-              <div className="task-detail">{data.due_date.split("T")[0]}</div>
+              <div className="task-detail">{data?.due_date.split("T")[0]}</div>
             </div>
           </div>
         </div>
         <div className="comments-main-div">
           <div style={{ position: "relative", right: "20px", bottom: "15px" }}>
             <textarea
+              value={commentTxt}
               placeholder="დაწერე კომენტარი"
               className="text-area"
               style={{
@@ -175,6 +209,7 @@ const TaskDetail = () => {
                 borderRadius: "10px",
                 padding: "28px 20px",
               }}
+              onChange={(e) => setCommentTxt(e.target.value)}
             />
             <button
               style={{
@@ -184,12 +219,13 @@ const TaskDetail = () => {
                 bottom: "15px",
               }}
               className="purple-btn"
+              onClick={postComment}
             >
               დააკომენტარე
             </button>
           </div>
           <div className="comments-div">
-            <Comment taskId={id} />
+            <Comments comments={comments} taskId={id} />
           </div>
         </div>
       </div>

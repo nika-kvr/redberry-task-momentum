@@ -111,6 +111,7 @@ export const PostEmployee = async (data) => {
     throw e;
   }
 };
+
 export const PostTask = async (data) => {
   try {
     const response = await Axios.post(`${BASE_URL}tasks`, data, {
@@ -118,6 +119,24 @@ export const PostTask = async (data) => {
         Authorization: `Bearer ${API_TOKEN}`,
       },
     });
+    return response;
+  } catch (e) {
+    console.error("Error posting employee:", e);
+    throw e;
+  }
+};
+
+export const PostComment = async (data, taskId) => {
+  try {
+    const response = await Axios.post(
+      `${BASE_URL}tasks/${taskId}/comments`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${API_TOKEN}`,
+        },
+      }
+    );
     return response;
   } catch (e) {
     console.error("Error posting employee:", e);

@@ -42,14 +42,18 @@ const Selectfield = ({
     <div style={{ width: widthPx }} className="select-field" ref={selectRef}>
       <div
         style={{ width: widthPx }}
-        className={`select-container ${options.length === 0 ? "disabled" : ""}`}
-        onClick={options.length > 0 ? handleToggle : null}
+        className={`select-container ${
+          options?.length === 0 ? "disabled" : ""
+        }`}
+        onClick={options?.length > 0 ? handleToggle : null}
       >
         <div style={{ width: widthPx }} className="selected-value">
-          {selected.icon && <img className="emp-img" src={selected.icon} />}
-          {selected.avatar && <img className="emp-img" src={selected.avatar} />}
-          {selected.name && <p>{selected.name}</p>}
-          {selected.surname && <p>{selected.surname}</p>}
+          {selected?.icon && <img className="emp-img" src={selected?.icon} />}
+          {selected?.avatar && (
+            <img className="emp-img" src={selected?.avatar} />
+          )}
+          {selected?.name && <p>{selected.name}</p>}
+          {selected?.surname && <p>{selected.surname}</p>}
         </div>
         <div className={`arrow ${isOpen ? "open" : ""}`}>
           <ArrowSvg />
@@ -69,7 +73,7 @@ const Selectfield = ({
               <p style={{ color: "#8338EC" }}>დაამატე თანამშრომელი</p>
             </div>
           )}
-          {options.map((option) => (
+          {options?.map((option) => (
             <div
               key={option.id}
               onClick={() => handleSelect(option)}

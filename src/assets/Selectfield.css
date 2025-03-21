@@ -48,7 +48,9 @@
 
 .emp-img {
   width: 28px;
-  border-radius: 100px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .selected-value {

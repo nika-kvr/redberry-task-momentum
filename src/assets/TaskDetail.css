@@ -40,3 +40,15 @@
   background-color: #ddd2ff;
   border-radius: 10px;
 }
+.comments-div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.comment-card {
+  display: flex;
+  flex-direction: row;
+  margin-top: 40px;
+  gap: 12px;
+}
