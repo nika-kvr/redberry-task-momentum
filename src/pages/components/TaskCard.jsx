@@ -1,5 +1,6 @@
 import CommentLogo from "../../assets/images/commentImg.png";
 import { useNavigate } from "react-router-dom";
+import GetDepClr from "./GetDepClr";
 
 const truncateText = (text, size) => {
   if (!text) return "";
@@ -63,7 +64,10 @@ const TaskCard = (data) => {
                 {task.priority.name}
               </p>
             </div>
-            <div className="dep-div">
+            <div
+              style={{ backgroundColor: GetDepClr(task.department.id) }}
+              className="dep-div"
+            >
               <p style={{ fontSize: "12px" }}>
                 <TruncatedText text={task.department.name} size="sm" />
               </p>

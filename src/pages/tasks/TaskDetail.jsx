@@ -16,6 +16,7 @@ import CalendarSvg from "../components/CalendarSvg";
 import Selectfield from "../components/Selectfield";
 import Comments from "./Comments";
 import { useNavigate } from "react-router-dom";
+import GetDepClr from "../components/GetDepClr";
 
 const TaskDetail = () => {
   const navigate = useNavigate();
@@ -117,7 +118,10 @@ const TaskDetail = () => {
                 {data?.priority.name}
               </p>
             </div>
-            <div className="dep-div">
+            <div
+              style={{ backgroundColor: GetDepClr(data.department.id) }}
+              className="dep-div"
+            >
               {<TruncatedText text={data?.department.name} size="sm" />}
             </div>
           </div>
