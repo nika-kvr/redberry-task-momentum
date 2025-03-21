@@ -23,10 +23,14 @@ const TaskDetail = () => {
 
   const [commentTxt, setCommentTxt] = useState("");
 
-  const { data, error, isLoading } = useQuery({
+  const {
+    data,
+    error,
+    isLoading,
+    refetch: refetchTasks,
+  } = useQuery({
     queryKey: ["tasks", id],
     queryFn: () => GetTask(id),
-    retry: Infinity,
   });
 
   const {
@@ -73,10 +77,9 @@ const TaskDetail = () => {
       status_id: option.id,
     };
     const taskId = data.id;
-    console.log(data, taskId);
     const res = await PutTask(taskId, dataReq);
     if (res.status === 200) {
-      navigate("/");
+      refetchTasks();
     }
   };
 
@@ -89,8 +92,8 @@ const TaskDetail = () => {
       };
       const res = await PostComment(data, id);
       if (res.status === 201) {
-        refetch();
         setCommentTxt("");
+        refetch();
       }
     }
   };
@@ -100,7 +103,6 @@ const TaskDetail = () => {
   if (error || errorStatus || errorComments)
     return <div>Error loading data</div>;
 
-  console.log(comments);
   return (
     <div>
       <div className="main-div">
@@ -164,7 +166,7 @@ const TaskDetail = () => {
               <div className="task-detail">
                 <Selectfield
                   width={"small"}
-                  options={statuses && statuses}
+                  options={statuses}
                   selected={data?.status}
                   onChange={handleStatusChange}
                 />
@@ -181,7 +183,7 @@ const TaskDetail = () => {
                   <img className="task-card-img" src={data?.employee.avatar} />
                 </div>
                 <div>
-                  <div style={{ fontSize: "12px", width: "200px" }}>
+                  <div style={{ fontSize: "12px", width: "244px" }}>
                     {data?.department.name}
                   </div>
                   <div style={{ display: "flex", gap: "6px" }}>
@@ -225,7 +227,7 @@ const TaskDetail = () => {
             </button>
           </div>
           <div className="comments-div">
-            <Comments comments={comments} taskId={id} />
+            <Comments comments={comments} taskId={id} refetch={refetch} />
           </div>
         </div>
       </div>

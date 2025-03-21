@@ -52,3 +52,12 @@
   margin-top: 40px;
   gap: 12px;
 }
+.reply-btn {
+  width: 24px;
+  cursor: pointer;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
