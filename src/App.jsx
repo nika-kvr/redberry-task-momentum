@@ -26,8 +26,8 @@ function App() {
               path="/taskForm"
               element={<TaskForm toggleModal={toggleModal} />}
             />
-            <Route path="*" element={<h1> PAGE NOT FOUND</h1>} />
             <Route path="/task/:id" element={<TaskDetail />} />
+            <Route path="*" element={<h1> PAGE NOT FOUND</h1>} />
           </Routes>
         </QueryClientProvider>
       </Router>
