@@ -183,7 +183,13 @@ const TaskDetail = () => {
                   <img className="task-card-img" src={data?.employee.avatar} />
                 </div>
                 <div>
-                  <div style={{ fontSize: "12px", width: "244px" }}>
+                  <div
+                    style={{
+                      textAlign: "left",
+                      fontSize: "12px",
+                      width: "244px",
+                    }}
+                  >
                     {data?.department.name}
                   </div>
                   <div style={{ display: "flex", gap: "6px" }}>
