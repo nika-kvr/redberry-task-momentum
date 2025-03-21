@@ -7,6 +7,7 @@ import "@fontsource/firago";
 import Header from "./pages/Header";
 import TaskForm from "./pages/tasks/TaskForm";
 import TaskDetail from "./pages/tasks/TaskDetail";
+import ClearLocalStorage from "./pages/ClearLocalstorage";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ function App() {
   return (
     <div className="App">
       <Router>
+        <ClearLocalStorage />
         <Header showModal={showModal} toggleModal={toggleModal} />
         <QueryClientProvider client={queryClient}>
           <Routes>

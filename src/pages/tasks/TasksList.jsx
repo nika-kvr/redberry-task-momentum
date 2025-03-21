@@ -9,46 +9,74 @@ import "../../assets/TasksList.css";
 import ArrowSvg from "../components/arrowSvg";
 import TaskCard from "../components/TaskCard";
 import { CheckSvg } from "../components/CheckSvg";
+import { useQuery } from "@tanstack/react-query";
 import x from "../../assets/images/x.png";
+import { useLocation } from "react-router-dom";
 
 const TasksList = () => {
   const selectRef = useRef(null);
-  const [tasks, setTasks] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
-  const [employees, setEmployees] = useState([]);
-  const [departments, setDepartments] = useState([]);
-  const [priorities, setPriorities] = useState([]);
 
-  const [filterEmp, setFilterEmp] = useState("");
+  const [filterEmp, setFilterEmp] = useState(
+    Number(localStorage.getItem("filterEmp")) || ""
+  );
   const [selectedEmpId, setSelectedEmpId] = useState("");
 
-  const [filterDeps, setFilterDeps] = useState([]);
+  const [filterDeps, setFilterDeps] = useState(
+    JSON.parse(localStorage.getItem("filterDeps")) || []
+  );
   const [selectedDeps, setSelectedDeps] = useState([]);
 
-  const [filterPrios, setFilterPrios] = useState([]);
+  const [filterPrios, setFilterPrios] = useState(
+    JSON.parse(localStorage.getItem("filterPrios")) || []
+  );
   const [selectedPrios, setSelectedPrios] = useState([]);
 
   const [empFilterDiv, setEmpFilterDiv] = useState(false);
   const [depFilterDiv, setDepFilterDiv] = useState(false);
   const [priosFilterDiv, setPriosFilterDiv] = useState(false);
 
+  const {
+    data: tasks,
+    errorTasks,
+    isLoadingTasks,
+  } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: GetTasks,
+  });
+
+  const {
+    data: departments,
+    errorDeps,
+    isLoadingDeps,
+  } = useQuery({
+    queryKey: ["departments"],
+    queryFn: GetDepartments,
+  });
+
+  const {
+    data: employees,
+    errorEmps,
+    isLoadingEmps,
+  } = useQuery({
+    queryKey: ["employees"],
+    queryFn: GetEmployees,
+  });
+
+  const {
+    data: priorities,
+    errorPrios,
+    isLoadingPrios,
+  } = useQuery({
+    queryKey: ["priorities"],
+    queryFn: GetPriorities,
+  });
+
   // console.log(tasks);
 
   // fetch data
   useEffect(() => {
-    const fetchData = async () => {
-      const tasks = await GetTasks();
-      const employees = await GetEmployees();
-      const departments = await GetDepartments();
-      const priorities = await GetPriorities();
-
-      setFilteredTasks(tasks);
-      setTasks(tasks);
-      setEmployees(employees);
-      setDepartments(departments);
-      setPriorities(priorities);
-    };
-    fetchData();
+    setFilteredTasks(tasks);
 
     document.addEventListener("mousedown", handleClickOutside);
 
@@ -75,7 +103,7 @@ const TasksList = () => {
 
   // filter tasks
   useEffect(() => {
-    const filteredTasks = tasks.filter((task) => {
+    const filteredTasks = tasks?.filter((task) => {
       const filterWithEmployee = filterEmp
         ? Number(filterEmp) === task.employee.id
         : true;
@@ -95,12 +123,12 @@ const TasksList = () => {
     localStorage.setItem("filterEmp", filterEmp);
     localStorage.setItem("filterDeps", JSON.stringify(filterDeps));
     localStorage.setItem("filterPrios", JSON.stringify(filterPrios));
-  }, [filterEmp, filterDeps, filterPrios]);
+  }, [tasks, filterEmp, filterDeps, filterPrios]);
 
-  const tasks1 = filteredTasks.filter((task) => task.status.id === 1);
-  const tasks2 = filteredTasks.filter((task) => task.status.id === 2);
-  const tasks3 = filteredTasks.filter((task) => task.status.id === 3);
-  const tasks4 = filteredTasks.filter((task) => task.status.id === 4);
+  const tasks2 = filteredTasks?.filter((task) => task.status.id === 2);
+  const tasks1 = filteredTasks?.filter((task) => task.status.id === 1);
+  const tasks3 = filteredTasks?.filter((task) => task.status.id === 3);
+  const tasks4 = filteredTasks?.filter((task) => task.status.id === 4);
 
   const handleChooseEmp = () => {
     setEmpFilterDiv(false);
@@ -163,6 +191,11 @@ const TasksList = () => {
     setSelectedPrios(filterPrios);
   };
 
+  if (isLoadingTasks || isLoadingPrios || isLoadingEmps || isLoadingDeps)
+    return <div>Loading...</div>;
+  if (errorTasks || errorPrios || errorEmps || errorDeps)
+    return <div>Error loading data</div>;
+
   return (
     <div
       style={{
@@ -184,7 +217,7 @@ const TasksList = () => {
           {depFilterDiv && (
             <div ref={selectRef} className="emp-filter-div">
               <div className="emp-div-main">
-                {departments.map((dep) => (
+                {departments?.map((dep) => (
                   <div key={dep.id} className="emp-div">
                     <div
                       onClick={() => handleDepsCheck(dep.id)}
@@ -218,7 +251,7 @@ const TasksList = () => {
           {priosFilterDiv && (
             <div ref={selectRef} className="emp-filter-div">
               <div className="emp-div-main">
-                {priorities.map((prio) => (
+                {priorities?.map((prio) => (
                   <div key={prio.id} className="emp-div">
                     <div
                       onClick={() => handlePriosCheck(prio.id)}
@@ -252,7 +285,7 @@ const TasksList = () => {
           {empFilterDiv && (
             <div ref={selectRef} className="emp-filter-div">
               <div className="emp-div-main">
-                {employees.map((emp) => (
+                {employees?.map((emp) => (
                   <div key={emp.id} className="emp-div">
                     <div
                       onClick={() => handleEmpCheck(emp.id)}
@@ -282,17 +315,21 @@ const TasksList = () => {
       </div>
 
       <div className="filter-btns-div">
-        {filterEmp && (
-          <div onClick={() => setFilterEmp("")}>
-            <div style={{ all: "unset" }}>
-              {employees.find((emp) => emp.id === filterEmp).name}
-            </div>
-            <div style={{ all: "unset" }}>
-              {employees.find((emp) => emp.id === filterEmp).surname}
-            </div>
-            <img src={x} />
-          </div>
-        )}
+        {filterEmp &&
+          employees &&
+          employees.length > 0 &&
+          (() => {
+            const selectedEmployee = employees.find(
+              (emp) => emp.id === Number(filterEmp)
+            );
+            return selectedEmployee ? (
+              <div onClick={() => setFilterEmp("")}>
+                <div style={{ all: "unset" }}>{selectedEmployee.name}</div>
+                <div style={{ all: "unset" }}>{selectedEmployee.surname}</div>
+                <img src={x} />
+              </div>
+            ) : null;
+          })()}
         {filterDeps.length > 0 && (
           <div onClick={() => setFilterDeps([])}>
             {/* {departments.find((dep) => dep.id === filterDeps[0]).name} */}
@@ -327,7 +364,7 @@ const TasksList = () => {
           <div style={{ backgroundColor: "#F7BC30" }} className="task-header">
             დასაწყები
           </div>
-          {tasks1.map((task) => (
+          {tasks1?.map((task) => (
             <TaskCard key={task.id} data={task} />
           ))}
         </div>
@@ -335,7 +372,7 @@ const TasksList = () => {
           <div style={{ backgroundColor: "#FB5607" }} className="task-header">
             პროგრესში
           </div>
-          {tasks2.map((task) => (
+          {tasks2?.map((task) => (
             <TaskCard key={task.id} data={task} />
           ))}
         </div>
@@ -343,7 +380,7 @@ const TasksList = () => {
           <div style={{ backgroundColor: "#FF006E" }} className="task-header">
             მზად ტესტირებისთვის
           </div>
-          {tasks3.map((task) => (
+          {tasks3?.map((task) => (
             <TaskCard key={task.id} data={task} />
           ))}
         </div>
@@ -351,7 +388,7 @@ const TasksList = () => {
           <div style={{ backgroundColor: "#3A86FF" }} className="task-header">
             დასრულებული
           </div>
-          {tasks4.map((task) => (
+          {tasks4?.map((task) => (
             <TaskCard key={task.id} data={task} />
           ))}
         </div>
