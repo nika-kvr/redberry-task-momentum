@@ -1,31 +1,4 @@
-import { useEffect, useState } from "react";
-import { GetComments } from "./Requests";
-
 const Comments = ({ comments, taskId }) => {
-  // const [comments, setComments] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
-
-  // useEffect(() => {
-  //   if (!taskId) return;
-  //   const fetchComments = async () => {
-  //     try {
-  //       const response = await GetComments(taskId);
-  //       setComments(response);
-  //     } catch (e) {
-  //       setError(e.message);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchComments();
-  // }, [taskId]);
-
-  // console.log(comments);
-
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error: {error}</p>;
-
   return (
     <div className="comments-div">
       {comments && (
