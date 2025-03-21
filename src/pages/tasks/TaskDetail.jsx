@@ -184,7 +184,11 @@ const TaskDetail = () => {
                 className="task-detail"
               >
                 <div>
-                  <img className="task-card-img" src={data?.employee.avatar} />
+                  <img
+                    style={{ width: "32px", height: "32px" }}
+                    className="task-card-img"
+                    src={data?.employee.avatar}
+                  />
                 </div>
                 <div>
                   <div
