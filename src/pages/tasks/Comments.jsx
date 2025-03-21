@@ -16,6 +16,7 @@ const Comments = ({ comments, taskId, refetch }) => {
       const res = await PostComment(data, taskId);
       if (res.status === 201) {
         setReplyComment("");
+        setOpenedReply("");
         refetch();
       }
     }
